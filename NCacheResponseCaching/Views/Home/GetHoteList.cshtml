@@ -1,0 +1,47 @@
+﻿@model IEnumerable<NCacheResponseCaching.Models.Hotel>
+
+@{
+    ViewData["Title"] = "GetHoteList";
+}
+
+
+<div class="row float-lg-right">
+    <h9 style=" color:red">Page Requested on @DateTime.Now.ToString()</h9>
+</div>
+<distributed-cache-ncache name="Hotel:hoteList"
+                          expires-sliding="new TimeSpan(0,10,0)"
+                   depends-on="SELECT [h].[Id], [h].[Name] FROM [dbo].[Hotels] AS [h]" 
+                   dependency-type="SQLServer">
+    <div class="row float-lg-right">
+        <h9 style=" color:green">Last generated at @DateTime.Now.ToString()</h9>
+    </div>
+<h1>GetHoteList</h1>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+</distributed-cache-ncache>
